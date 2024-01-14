@@ -1,0 +1,80 @@
+
+Homomorphic Operator
+	HOkeygen(need a random seed?) -> (R, S):
+
+		choose random S,
+		choose R mod S s.t. gcd(R, S) = 1
+
+	HOencryption(sk, f):
+		
+		sk: (R, S)
+
+		f: multivariate poly (use flint to init and assign) over F_q
+
+		for each c_i in f.coefficients():
+			h_i = R*c_i
+			h_i mod S
+		
+		h: cipher multivariate poly (use flint to init and assign) over F_q
+
+		return h;
+
+	HOdecryption(sk, h):
+
+		sk: (R, S)
+
+		h: cipher multivariate poly (use flint to init and assign) over F_q
+
+		for each c_i in h.coefficients():
+			f_i = R^{-1}*c_i
+			f_i mod S
+
+		f: multivariate poly (use flint to init and assign) over F_q
+		return f;
+
+
+
+HPPKkeyGen():
+	Private Key Generation: 
+		HOkeygen -> HO_1 = (R_1, S)
+		HOkeygen -> HO_2 = (R_2, S) s.t. (R_1 != R_2)
+		f_1(x): univariate poly with random coeff from F_q (use flint to init and assign) with order < 5
+		f_2(x): univariate poly with random coeff from F_q (use flint to init and assign) with order < 5
+		B(x, x_1, ..., x_m): base multivariate poly used once and never stored for generation of plain public keys p_1 and p_2 (use flint to init and assign and clear from memory)
+
+	Public Key Generation:
+	
+		p_1(x, x_1, ..., x_m): multivariate poly constructed by poly mul of B(x, x_1, ..., x_m) and f_1(x) (use flint to mul the two values)
+		p_2(x, x_1, ..., x_m): multivariate poly constructed by poly mul of B(x, x_1, ..., x_m) and f_2(x) (use flint to mul the two values)
+
+		HOencryption(HO_1, p_1) -> cp_1
+		HOencryption(HO_2, p_2) -> cp_2
+
+		return (cp_1, cp_2)
+
+
+
+HPPKencryption(x, (cp_1, cp_2)):
+	plain text message = x mod q
+	random assign x_1, ..., x_m as noise mod q
+	precalculate and store the values for x_11 = x_1*x, x_12 = x_1*x^2 ... x_mm = x_m * x^m 
+		since each value corresponds to the coefficient of the corresponding term in the public key (cp_1, cp_2)
+
+	use flint to evaluate cp_1 and cp_2 on these values of x, x_1, ..., x_m
+		C_1 = cp_1(x, x_1, ..., x_m)
+		C_2 = cp_2(x, x_1, ..., x_m)
+	
+		return (C_1, C_2)
+
+
+
+HPPKdencryption((C_1, C_2), (HO_1, HO_2), (f_1(x), f_2(x))):
+	HOdecryption(HO_1, C_1) -> CP_1 
+	HOdecryption(HO_2, C_2) -> CP_2
+
+	divide CP_1 by CP_2 to eliminate noise variables and the base poly B(x, x_1, ..., x_m) to get
+		CP_1 / CP_2 = K = f_1(x)/f_2(x)
+	
+	solve for x knowing K, f_1(x) and f_2(x)
+	return x;
+
