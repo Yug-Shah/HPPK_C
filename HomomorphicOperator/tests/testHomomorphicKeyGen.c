@@ -1,11 +1,16 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "flint/fmpz.h"
-#include "flint/fmpz_mod_mpoly.h"
-#include "flint/mpoly.h"
+#include "flint/flint.h"
 #include "../homomorphicOperator.h"
 #include "../utility/utilityFunctions.h"
 
+void init_seed_state(flint_rand_t state){
+    
+    //Initialize by seeding a random state
+    ulong seed1, seed2;
+    seed1 = clock();
+    seed2 = time(NULL);
+    flint_randseed(state, seed1, seed2);
+}
 
 void testKeyGenSingle(){
     fmpz_t R, R_inv, S;
@@ -18,7 +23,7 @@ void testKeyGenSingle(){
     flint_rand_t state;
     init_seed_state(state);
 
-    keyGenSingle(R, R_inv, S, bits, state); // call the main function
+    homomorphicKeyGenSingle(R, R_inv, S, bits, state); // call the main function
 
     flint_printf("S : ");
     fmpz_print(S);
@@ -49,7 +54,7 @@ void testKeyGenDouble(){
     flint_rand_t state;
     init_seed_state(state);
 
-    keyGenDouble(R_1, R_2, R_1_inv, R_2_inv, S, bits, state); // call the main function
+    homomorphicKeyGenDouble(R_1, R_2, R_1_inv, R_2_inv, S, bits, state); // call the main function
 
     flint_printf("S : ");
     fmpz_print(S);
@@ -72,12 +77,4 @@ void testKeyGenDouble(){
     fmpz_clear(R_2);
     fmpz_clear(R_1_inv);
     fmpz_clear(R_2_inv);
-}
-
-int main(){
-    flint_printf("\nTesting keygen for single pair (R, R_inv) \n");
-    testKeyGenSingle();
-    flint_printf("\nTesting keygen for two pairs (R_1, R_1_inv), (R_2, R_2_inv)\n");
-    testKeyGenDouble();
-    flint_printf("\n");
 }

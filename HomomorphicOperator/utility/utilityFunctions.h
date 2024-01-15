@@ -1,12 +1,6 @@
-#include <flint/flint.h>
-#include <time.h>
+#ifndef utilityFunctions_H_
+#define utilityFunctions_H_
 
-extern void init_seed_state(flint_rand_t state){
-    
-    //Initialize by seeding a random state
-    ulong seed1, seed2;
-    seed1 = clock();
-    seed2 = time(NULL);
-    flint_randseed(state, seed1, seed2);
-}
+extern void init_seed_state(flint_rand_t state);
 
+#endif //utilityFunctions_H_

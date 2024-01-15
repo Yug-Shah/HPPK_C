@@ -11,15 +11,14 @@
 //     h: cipher multivariate poly (use flint to init and assign) over F_q
 
 //     return h;
-#include <stdlib.h>
-#include <stdio.h>
 #include "flint/fmpz.h"
 #include "flint/fmpz_mod_mpoly.h"
 #include "flint/mpoly.h"
 #include "homomorphicOperator.h"
+#include "flint/fmpz_mod.h"
 
 
-void keyGenSingle(fmpz_t R, fmpz_t R_inv, fmpz_t S, flint_bitcnt_t bits, flint_rand_t state){
+void homomorphicKeyGenSingle(fmpz_t R, fmpz_t R_inv, fmpz_t S, flint_bitcnt_t bits, flint_rand_t state){
     //calc the max_value (done to remove the case where S was negative)
     fmpz_t max;
     fmpz_init(max);
@@ -43,7 +42,7 @@ void keyGenSingle(fmpz_t R, fmpz_t R_inv, fmpz_t S, flint_bitcnt_t bits, flint_r
     fmpz_clear(gcd);
 }
 
-void keyGenDouble(fmpz_t R_1, fmpz_t R_2, fmpz_t R_1_inv, fmpz_t R_2_inv, fmpz_t S,
+void homomorphicKeyGenDouble(fmpz_t R_1, fmpz_t R_2, fmpz_t R_1_inv, fmpz_t R_2_inv, fmpz_t S,
             flint_bitcnt_t bits, flint_rand_t state)
 {
     //calc the max_value (done to remove the case where S was negative)
@@ -83,16 +82,22 @@ void keyGenDouble(fmpz_t R_1, fmpz_t R_2, fmpz_t R_1_inv, fmpz_t R_2_inv, fmpz_t
     fmpz_clear(gcd);
 }
 
-void Encrypt(fmpz_mod_mpoly_t output, const fmpz_mod_mpoly_t input, const fmpz_t R, const fmpz_t S, 
+void homomorphicEncryptPoly(fmpz_mod_mpoly_t output, const fmpz_mod_mpoly_t input, const fmpz_t R, const fmpz_t S, 
     fmpz_mod_mpoly_ctx_t ctx)
 {  
     fmpz_mod_mpoly_init(output, ctx);
     fmpz_mod_mpoly_scalar_mul_fmpz_mod_invertible(output, input, R, ctx);
 }
 
-void Decrypt(fmpz_mod_mpoly_t output, const fmpz_mod_mpoly_t input, const fmpz_t R_inv, const fmpz_t S, 
+void homomorphicDecryptPoly(fmpz_mod_mpoly_t output, const fmpz_mod_mpoly_t input, const fmpz_t R_inv, const fmpz_t S, 
     fmpz_mod_mpoly_ctx_t ctx)
 {
     fmpz_mod_mpoly_init(output, ctx);
     fmpz_mod_mpoly_scalar_mul_fmpz_mod_invertible(output, input, R_inv, ctx);
+}
+
+void homomorphicDecryptCipherText(fmpz_t output, const fmpz_t input, const fmpz_t R_inv, fmpz_mod_ctx_t ctx)
+{
+    fmpz_init(output);
+    fmpz_mod_mul(output, input, R_inv, ctx);
 }

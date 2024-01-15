@@ -1,8 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "flint/fmpz.h"
 #include "flint/fmpz_mod_mpoly.h"
-#include "flint/mpoly.h"
 #include "../homomorphicOperator.h"
 #include "../utility/utilityFunctions.h"
 
@@ -21,7 +18,7 @@ void testEncryptDecrypt(){
     init_seed_state(state);
 
     //generate set of keys to use for test
-    keyGenSingle(R, R_inv, S, bits, state);
+    homomorphicKeyGenSingle(R, R_inv, S, bits, state);
     
     fmpz_mod_mpoly_t encOut, encIn, decIn, decOut;
 
@@ -48,7 +45,7 @@ void testEncryptDecrypt(){
 
     //call the encryption fuction on encIn and get the cipher text in encOut
     //Print the cipher text
-    Encrypt(encOut, encIn, R, S, ctx);
+    homomorphicEncryptPoly(encOut, encIn, R, S, ctx);
     flint_printf("Encryption output: ");
     fmpz_mod_mpoly_print_pretty(encOut, x, ctx);
     flint_printf("\n\n");
@@ -66,12 +63,8 @@ void testEncryptDecrypt(){
 
     //call the decryption fuction on decIn and get the plain text in decOut
     //Print the plain text
-    Decrypt(decOut, decIn, R_inv, S, ctx);
+    homomorphicDecryptPoly(decOut, decIn, R_inv, S, ctx);
     flint_printf("Decryption output: ");
     fmpz_mod_mpoly_print_pretty(decOut, x, ctx);
     flint_printf("\n\n");    
-}
-
-int main(){
-    testEncryptDecrypt();
 }
