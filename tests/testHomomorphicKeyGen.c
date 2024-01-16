@@ -1,20 +1,12 @@
 #include "flint/fmpz.h"
 #include "flint/flint.h"
-#include "../homomorphicOperator.h"
-#include "../utility/utilityFunctions.h"
+#include "../HomomorphicOperator/homomorphicOperator.h"
+#include "../utilities/functions.h"
 
-void init_seed_state(flint_rand_t state){
-    
-    //Initialize by seeding a random state
-    ulong seed1, seed2;
-    seed1 = clock();
-    seed2 = time(NULL);
-    flint_randseed(state, seed1, seed2);
-}
 
 void testKeyGenSingle(){
     fmpz_t R, R_inv, S;
-    flint_bitcnt_t bits = 10; // can change based on the number of bits required.
+    flint_bitcnt_t bits = 12; // can change based on the number of bits required.
 
     fmpz_init(R);
     fmpz_init(R_inv);
@@ -43,7 +35,7 @@ void testKeyGenSingle(){
 
 void testKeyGenDouble(){
     fmpz_t R_1, R_2, R_1_inv, R_2_inv, S;
-    flint_bitcnt_t bits = 10; // can change based on the number of bits required.
+    flint_bitcnt_t bits = 12; // can change based on the number of bits required.
 
     fmpz_init(R_1);
     fmpz_init(R_2);

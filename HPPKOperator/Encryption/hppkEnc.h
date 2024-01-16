@@ -3,8 +3,8 @@
 
 #include "flint/fmpz.h"
 #include "flint/fmpz_mod_mpoly.h"
-#include "utility/structs.h"
+#include "../../utilities/structs.h"
 
-cipherText hppkEncrypt(publicKey key, fmpz_t x);
+cipherText hppkEncrypt(publicKey key, fmpz_t x, fmpz_mod_mpoly_ctx_t ctx);
 
 #endif //hppkEnc_H_

@@ -1,7 +1,7 @@
 #include "flint/fmpz.h"
 #include "flint/fmpz_mod_mpoly.h"
-#include "../homomorphicOperator.h"
-#include "../utility/utilityFunctions.h"
+#include "../HomomorphicOperator/homomorphicOperator.h"
+#include "../utilities/functions.h"
 
 
 void testEncryptDecrypt(){

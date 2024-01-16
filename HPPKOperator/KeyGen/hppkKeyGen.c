@@ -22,9 +22,10 @@
 // #include "flint/fq.h"
 // #include "flint/fmpz_mpoly.h"
 // #include "flint/fmpz_mod_mpoly.h"
-#include "../HomomorphicOperator/homomorphicOperator.h"
-#include "../HomomorphicOperator/utility/utilityFunctions.h"
-#include "utility/structs.h"
+#include "../../HomomorphicOperator/homomorphicOperator.h"
+#include "../../utilities/functions.h"
+#include "../../utilities/structs.h"
+#include "../../utilities/constants.h"
 #include "hppkKeyGen.h"
 
 hppkKeys hppkKeyGen(flint_rand_t state){
@@ -34,7 +35,6 @@ hppkKeys hppkKeyGen(flint_rand_t state){
     hppkKeys keys;
 
     //define required constants
-    flint_bitcnt_t bits = 10;
     slong length = 3;
     slong nvars = 1;
     const ordering_t ord = ORD_DEGREVLEX;

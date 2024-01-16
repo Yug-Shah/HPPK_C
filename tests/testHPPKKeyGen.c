@@ -1,36 +1,33 @@
 #include "flint/fmpz.h"
-// #include "flint/mpoly.h"
-// #include "flint/fq_poly.h"
-// #include "flint/fq.h"
-// #include "flint/fmpz_mpoly.h"
 #include "flint/fmpz_mod_mpoly.h"
-#include "../../HomomorphicOperator/homomorphicOperator.h"
-#include "../../HomomorphicOperator/utility/utilityFunctions.h"
-#include "../utility/structs.h"
-#include "../hppkKeyGen.h"
+#include "../HomomorphicOperator/homomorphicOperator.h"
+#include "../utilities/functions.h"
+#include "../utilities/structs.h"
+#include "../HPPKOperator/KeyGen/hppkKeyGen.h"
 
 void testHPPKKeyGen(){
     // flint_bitcnt_t bits = 10;
+    //initialize random state
     flint_rand_t state;
     init_seed_state(state);
-    // slong length = 3;
+    
+    //initialize context
     slong nvars = 1;
-    // ulong exp_bound = 8;
     const ordering_t ord = ORD_DEGREVLEX;
     fmpz_t primeQ;
     fmpz_set_ui(primeQ, 13);
-    // fmpz_mod_mpoly_t B, p_1, p_2;
+    fmpz_mod_mpoly_ctx_t uniFctx;
+    fmpz_mod_mpoly_ctx_init(uniFctx, nvars, ord, primeQ); 
+
     //used for testing output
     const char *var = "x"; 
-    // const char *value = "x";
-    // const char **x = &value;
     hppkKeys keys;
 
-    fmpz_mod_mpoly_ctx_t uniFctx;
-    fmpz_mod_mpoly_ctx_init(uniFctx, nvars, ord, primeQ);    
-
+   
+    //generate HPPK keys
     keys = hppkKeyGen(state);
 
+    //initialize context for testing keygen 
     fmpz_mod_mpoly_ctx_t homoEncctx;
     fmpz_mod_mpoly_ctx_init(homoEncctx, nvars, ord, keys.priv.S);
 
@@ -60,6 +57,7 @@ void testHPPKKeyGen(){
 
     flint_printf("\nPublic Keys: \n\n");
 
+    flint_printf("Plain public keys only shown for testing homomorphic decryption\n");
     flint_printf("PP_1(x) : ");
     fmpz_mod_mpoly_print_pretty(keys.pub.plainPublic_1, &var, uniFctx);
     flint_printf("\n");
@@ -83,6 +81,7 @@ void testHPPKKeyGen(){
     homomorphicDecryptPoly(keys.pub.plainPublic_1, keys.pub.cipherPublic_1, keys.priv.R1inv, keys.priv.S, homoEncctx);
     homomorphicDecryptPoly(keys.pub.plainPublic_2, keys.pub.cipherPublic_2, keys.priv.R2inv, keys.priv.S, homoEncctx);
 
+    flint_printf("Testing whether Decrypted Cipher Public Key(DCP) = Plain Public Key(PP)\n");
     flint_printf("DCP_1(x) : ");
     fmpz_mod_mpoly_print_pretty(keys.pub.plainPublic_1, &var, homoEncctx);
     flint_printf("\n");

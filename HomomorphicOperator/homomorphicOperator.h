@@ -3,7 +3,6 @@
 
 #include "flint/fmpz.h"
 #include "flint/fmpz_mod_mpoly.h"
-// #include "flint/mpoly.h"
 
 void homomorphicKeyGenSingle(fmpz_t R, fmpz_t R_inv, fmpz_t S, flint_bitcnt_t bits, flint_rand_t state);
 

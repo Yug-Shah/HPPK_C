@@ -11,12 +11,12 @@
 //     h: cipher multivariate poly (use flint to init and assign) over F_q
 
 //     return h;
+
 #include "flint/fmpz.h"
 #include "flint/fmpz_mod_mpoly.h"
 #include "flint/mpoly.h"
 #include "homomorphicOperator.h"
 #include "flint/fmpz_mod.h"
-
 
 void homomorphicKeyGenSingle(fmpz_t R, fmpz_t R_inv, fmpz_t S, flint_bitcnt_t bits, flint_rand_t state){
     //calc the max_value (done to remove the case where S was negative)
